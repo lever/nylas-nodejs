@@ -63,21 +63,21 @@ class NylasConnection
 
     new Promise (resolve, reject) ->
       request options, (error, response, body) ->
+        try
+          body = JSON.parse(body) if _.isString body
+        catch e
+          error = e unless error
+
         if error or response.statusCode > 299
           error ?= new Error(body.message)
+          error.code = body.type if body.type
           logOnError(error, response, body)
           reject(error)
         else
           if options.downloadRequest
             return resolve(response)
           else
-            try
-              body = JSON.parse(body) if _.isString body
-              resolve(body)
-            catch error
-              logOnError(error, response, body)
-              reject(error)
-
+            resolve(body)
 
 logOnError = (error, response, body) ->
   console.log('nylas-connection#request error: ', error.toString())
