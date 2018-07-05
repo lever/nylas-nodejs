@@ -70,12 +70,12 @@ class NylasConnection
 
         if error or response.statusCode > 299
           unless error
-            if _.isString(body.message)
-              error = new Error(body.message)
+            if _.isString(body?.message)
+              error = new Error(body?.message)
             else
-              error = new Error(JSON.stringify(body.message))
-          error.code = body.type if body.type
-          error.server_error = body.server_error if body.server_error
+              error = new Error(JSON.stringify(body?.message))
+          error.code = body.type if body?.type
+          error.server_error = body.server_error if body?.server_error
           logOnError(error, response, body)
           reject(error)
         else
