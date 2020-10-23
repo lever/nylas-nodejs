@@ -83,11 +83,7 @@ class RestfulModelCollection
             finished = models.length < REQUEST_CHUNK_SIZE or accumulated.length >= limit
             chunkCallback()
           )
-          .catch((err) ->
-            if err
-              callback(err) if callback
-              reject(err)
-          )
+          .catch(chunkCallback)
       , (err) ->
         if err
           callback(err) if callback
