@@ -77,10 +77,13 @@ class RestfulModelCollection
       , (chunkCallback) =>
         chunkOffset = offset + accumulated.length
         chunkLimit = Math.min(REQUEST_CHUNK_SIZE, limit - accumulated.length)
-        @getModelCollection(params, chunkOffset, chunkLimit).then (models) ->
-          accumulated = accumulated.concat(models)
-          finished = models.length < REQUEST_CHUNK_SIZE or accumulated.length >= limit
-          chunkCallback()
+        @getModelCollection(params, chunkOffset, chunkLimit)
+          .then((models) ->
+            accumulated = accumulated.concat(models)
+            finished = models.length < REQUEST_CHUNK_SIZE or accumulated.length >= limit
+            chunkCallback()
+          )
+          .catch(chunkCallback)
       , (err) ->
         if err
           callback(err) if callback
